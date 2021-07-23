@@ -1,44 +1,49 @@
 import {
   props as layerProps,
-  setup as layerSetup
+  setup as layerSetup,
 } from "@vue-leaflet/vue-leaflet/src/functions/layer";
 
 export const props = {
   ...layerProps,
   pane: {
     type: String,
-    default: "markerPane"
+    default: "markerPane",
   },
   draggable: {
     type: Boolean,
     custom: true,
-    default: false
+    default: false,
   },
   latLng: {
     type: [Object, Array],
     custom: true,
-    default: null
+    default: null,
   },
   icon: {
     type: [Object],
     default: () => undefined,
-    custom: false
+    custom: false,
+  },
+  opacity: {
+    type: Number,
+    default: () => 1.0,
+    custom: false,
   },
   zIndexOffset: {
     type: Number,
     custom: false,
-    default: null
+    default: null,
   },
   rotationAngle: {
     type: Number,
     custom: true,
-    default: 0
+    default: 0,
   },
   rotationOrigin: {
     type: String,
     custom: false,
-    default: "bottom center"
-  }
+    default: "bottom center",
+  },
 };
 
 export const setup = (props, leafletRef, context) => {
@@ -49,7 +54,7 @@ export const setup = (props, leafletRef, context) => {
   );
   const options = {
     ...layerOptions,
-    ...props
+    ...props,
   };
 
   const methods = {
@@ -64,6 +69,11 @@ export const setup = (props, leafletRef, context) => {
     latLngSync(event) {
       context.emit("update:latLng", event.latlng);
       context.emit("update:lat-lng", event.latlng);
+    },
+    setOpacity(newVal) {
+      if (leafletRef.value) {
+        leafletRef.value.setOpacity(newVal);
+      }
     },
     setLatLng(newVal) {
       if (newVal == null) {
@@ -81,7 +91,7 @@ export const setup = (props, leafletRef, context) => {
       if (leafletRef.value) {
         leafletRef.value.setRotationAngle(value);
       }
-    }
+    },
   };
   return { options, methods };
 };
@@ -93,7 +103,7 @@ export function initRotatedMarker(L) {
 
   var oldIE = L.DomUtil.TRANSFORM === "msTransform";
 
-  L.Marker.addInitHook(function() {
+  L.Marker.addInitHook(function () {
     var iconOptions = this.options.icon && this.options.icon.options;
     var iconAnchor = iconOptions && this.options.icon.options.iconAnchor;
     if (iconAnchor) {
@@ -104,26 +114,25 @@ export function initRotatedMarker(L) {
     this.options.rotationAngle = this.options.rotationAngle || 0;
 
     // Ensure marker keeps rotated during dragging
-    this.on("drag", function(e) {
+    this.on("drag", function (e) {
       e.target._applyRotation();
     });
   });
 
   L.Marker.include({
-    _initIcon: function() {
+    _initIcon: function () {
       proto_initIcon.call(this);
     },
 
-    _setPos: function(pos) {
+    _setPos: function (pos) {
       proto_setPos.call(this, pos);
       this._applyRotation();
     },
 
-    _applyRotation: function() {
+    _applyRotation: function () {
       if (this.options.rotationAngle) {
-        this._icon.style[
-          L.DomUtil.TRANSFORM + "Origin"
-        ] = this.options.rotationOrigin;
+        this._icon.style[L.DomUtil.TRANSFORM + "Origin"] =
+          this.options.rotationOrigin;
 
         if (oldIE) {
           // for IE 9, use the 2D rotation
@@ -137,16 +146,16 @@ export function initRotatedMarker(L) {
       }
     },
 
-    setRotationAngle: function(angle) {
+    setRotationAngle: function (angle) {
       this.options.rotationAngle = angle;
       this.update();
       return this;
     },
 
-    setRotationOrigin: function(origin) {
+    setRotationOrigin: function (origin) {
       this.options.rotationOrigin = origin;
       this.update();
       return this;
-    }
+    },
   });
 }
