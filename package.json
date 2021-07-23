@@ -18,7 +18,8 @@
   },
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "@vue-leaflet/vue-leaflet": "^0.6.1",
