@@ -2,11 +2,9 @@
 Rotated marker for vue 3
 
 ## Install
-There is no npm package, you can install it locally
+There is no npm package yet, you can install it with
 ```shell
-git clone git@github.com:AntoninRousset/vue-leaflet-rotatedmarker.git
-npm install ./vue-leaflet-rotatedmarker
-cd vue-leaflet-rotatedmarker && npm run build
+npm install git+https://github.com/AntoninRousset/vue-leaflet-rotatedmarker.git
 ```
 
 ## Usage
